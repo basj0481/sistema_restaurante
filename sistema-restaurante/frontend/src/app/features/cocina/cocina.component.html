@@ -1,0 +1,43 @@
+<div class="encabezado">
+  <h2>Cocina — Pedidos</h2>
+</div>
+
+<div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+
+<div class="card" *ngIf="pedidos().length === 0">
+  <p style="color:#999; margin:0;">No hay pedidos en cola.</p>
+</div>
+
+<div class="columnas">
+  <div class="tarjeta-pedido card" *ngFor="let p of pedidos()"
+       [class.atrasado]="minutosTranscurridos(p.fechaCreacion) > 15">
+    <div class="cabecera">
+      <strong>{{ p.tipo === 'MESA' ? 'Mesa ' + p.numeroMesa : 'Para Llevar' }}</strong>
+      <span class="badge" [class.badge-gris]="p.estado === 'ENVIADO'" [class.badge-naranja]="p.estado === 'EN_PREPARACION'">
+        {{ p.estado === 'ENVIADO' ? 'Nuevo' : 'En Preparación' }}
+      </span>
+    </div>
+    <div class="tiempo">Hace {{ minutosTranscurridos(p.fechaCreacion) }} min</div>
+
+    <ul class="items">
+      <li *ngFor="let item of p.items">
+        {{ item.cantidad }}x {{ item.platillo }}
+        <span *ngIf="item.notas" class="notas">({{ item.notas }})</span>
+      </li>
+    </ul>
+
+    <button class="btn btn-primario" style="width:100%;"
+            *ngIf="p.estado === 'ENVIADO'"
+            [disabled]="procesando() === p.id"
+            (click)="recibir(p)">
+      Recibir
+    </button>
+
+    <button class="btn btn-exito" style="width:100%;"
+            *ngIf="p.estado === 'EN_PREPARACION'"
+            [disabled]="procesando() === p.id"
+            (click)="marcarListo(p)">
+      Listo
+    </button>
+  </div>
+</div>

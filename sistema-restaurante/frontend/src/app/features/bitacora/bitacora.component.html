@@ -1,0 +1,44 @@
+<div class="encabezado">
+  <h2>Bitácora del Sistema</h2>
+</div>
+
+<div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+
+<div class="filtros card">
+  <div class="form-campo">
+    <label>Tipo</label>
+    <select [(ngModel)]="tipo">
+      <option value="">Todas</option>
+      <option value="TRANSACCION">Transacciones</option>
+      <option value="USUARIO">Usuarios</option>
+    </select>
+  </div>
+  <div class="form-campo">
+    <label>Desde</label>
+    <input type="date" [(ngModel)]="desde" />
+  </div>
+  <div class="form-campo">
+    <label>Hasta</label>
+    <input type="date" [(ngModel)]="hasta" />
+  </div>
+  <button class="btn btn-primario" (click)="buscar()" [disabled]="cargando()">Buscar</button>
+  <button class="btn btn-secundario" (click)="limpiarFiltros()">Limpiar</button>
+  <button class="btn btn-secundario" (click)="exportar()" *ngIf="registros().length">Exportar</button>
+</div>
+
+<div class="card">
+  <table class="tabla">
+    <thead>
+      <tr><th>Fecha y hora</th><th>Tipo</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of registros()">
+        <td>{{ r.fecha | date: 'short' }}</td>
+        <td><span class="badge badge-gris">{{ r.tipo }}</span></td>
+        <td>{{ r.usuario }}</td>
+        <td>{{ r.accion }}</td>
+        <td>{{ r.detalle }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

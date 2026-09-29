@@ -1,0 +1,65 @@
+.pagina-menu {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 16px 100px;
+}
+
+.cabecera-menu {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.cabecera-menu h1 {
+  color: var(--color-primario);
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+.numero-mesa {
+  display: inline-block;
+  background: var(--color-primario);
+  color: white;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.estado { text-align: center; padding: 40px 0; color: #7a6a55; }
+.estado.error { color: var(--color-error); }
+
+.categoria { margin-bottom: 24px; }
+.categoria h2 {
+  font-size: 16px;
+  color: var(--color-primario-claro);
+  border-bottom: 2px solid var(--color-borde);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.platillo {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+.platillo.agotado { opacity: .5; }
+.platillo img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.platillo .info { flex: 1; }
+.nombre-precio { display: flex; justify-content: space-between; font-weight: 600; }
+.descripcion { margin: 4px 0 0; font-size: 13px; color: #7a6a55; }
+
+.barra-llamar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid var(--color-borde);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.boton-llamar { width: 100%; font-size: 15px; padding: 14px; }

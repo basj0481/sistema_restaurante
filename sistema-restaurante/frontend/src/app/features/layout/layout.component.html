@@ -1,0 +1,33 @@
+<div class="layout">
+  <aside class="barra-lateral">
+    <div class="marca">🍽️ Restaurante</div>
+
+    <nav *ngIf="auth.rol === 'ADMINISTRADOR'">
+      <a routerLink="/admin/usuarios" routerLinkActive="activo">Usuarios</a>
+      <a routerLink="/admin/inventario" routerLinkActive="activo">Inventario</a>
+      <a routerLink="/admin/menu" routerLinkActive="activo">Menú</a>
+      <a routerLink="/admin/reportes" routerLinkActive="activo">Reporte de Ventas</a>
+      <a routerLink="/admin/bitacora" routerLinkActive="activo">Bitácora</a>
+    </nav>
+
+    <nav *ngIf="auth.rol === 'MESERO'">
+      <a routerLink="/mesero/pedidos" routerLinkActive="activo">Pedidos</a>
+      <a routerLink="/mesero/llamados" routerLinkActive="activo">Llamados</a>
+    </nav>
+
+    <nav *ngIf="auth.rol === 'COCINA'">
+      <a routerLink="/cocina/pedidos" routerLinkActive="activo">Cocina</a>
+      <a routerLink="/cocina/inventario" routerLinkActive="activo">Inventario</a>
+    </nav>
+
+    <div class="usuario-actual">
+      <div class="nombre">{{ auth.sesion()?.nombreCompleto }}</div>
+      <div class="rol">{{ auth.rol }}</div>
+      <button class="btn btn-secundario" (click)="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <router-outlet></router-outlet>
+  </main>
+</div>

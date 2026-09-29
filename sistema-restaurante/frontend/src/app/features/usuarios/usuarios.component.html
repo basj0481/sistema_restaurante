@@ -1,0 +1,70 @@
+<div class="encabezado">
+  <h2>Usuarios</h2>
+  <button class="btn btn-primario" (click)="abrirFormulario()">+ Nuevo Usuario</button>
+</div>
+
+<div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+<div class="mensaje-exito" *ngIf="mensaje()">{{ mensaje() }}</div>
+
+<div class="card" style="margin-bottom: 20px;" *ngIf="mostrarFormulario()">
+  <h3>Nuevo Usuario</h3>
+  <form (ngSubmit)="guardar()">
+    <div class="form-campo">
+      <label>Nombre Completo</label>
+      <input type="text" name="nombreCompleto" [(ngModel)]="nuevo.nombreCompleto" required />
+    </div>
+    <div class="form-campo">
+      <label>Correo Electrónico</label>
+      <input type="email" name="correo" [(ngModel)]="nuevo.correo" required />
+    </div>
+    <div class="form-campo">
+      <label>Teléfono</label>
+      <input type="text" name="telefono" [(ngModel)]="nuevo.telefono" />
+    </div>
+    <div class="form-campo">
+      <label>Rol</label>
+      <select name="rol" [(ngModel)]="nuevo.rol" required>
+        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+      </select>
+    </div>
+    <div class="form-campo">
+      <label>Contraseña Temporal</label>
+      <input type="password" name="passwordTemporal" [(ngModel)]="nuevo.passwordTemporal" required />
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primario" type="submit" [disabled]="cargando()">Guardar</button>
+      <button class="btn btn-secundario" type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios()">
+        <td>{{ u.nombreCompleto }}</td>
+        <td>{{ u.correo }}</td>
+        <td><span class="badge badge-azul">{{ u.rol }}</span></td>
+        <td>
+          <span class="badge" [class.badge-verde]="u.activo" [class.badge-rojo]="!u.activo">
+            {{ u.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-secundario" (click)="cambiarEstado(u)">
+            {{ u.activo ? 'Desactivar' : 'Reactivar' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

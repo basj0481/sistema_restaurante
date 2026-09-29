@@ -1,0 +1,23 @@
+.columnas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.tarjeta-pedido {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tarjeta-pedido.atrasado {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tiempo { font-size: 12px; color: #7a6a55; }
+.items { margin: 0; padding-left: 18px; font-size: 14px; }
+.notas { color: #b5651d; font-size: 12px; }

@@ -1,0 +1,66 @@
+<div class="encabezado">
+  <h2>Menú</h2>
+  <button class="btn btn-primario" (click)="nuevoPlatillo()">+ Nuevo Platillo</button>
+</div>
+
+<div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+<div class="mensaje-exito" *ngIf="mensaje()">{{ mensaje() }}</div>
+
+<div class="card" style="margin-bottom:20px;" *ngIf="mostrarFormulario()">
+  <h3>{{ editandoId ? 'Editar Platillo' : 'Nuevo Platillo' }}</h3>
+  <form (ngSubmit)="guardar()">
+    <div class="form-campo">
+      <label>Nombre</label>
+      <input type="text" name="nombre" [(ngModel)]="form.nombre" required />
+    </div>
+    <div class="form-campo">
+      <label>Categoría</label>
+      <select name="categoriaId" [(ngModel)]="form.categoriaId" required>
+        <option *ngFor="let c of categorias()" [ngValue]="c.id">{{ c.nombre }}</option>
+      </select>
+    </div>
+    <div class="form-campo">
+      <label>Precio (Q)</label>
+      <input type="number" step="0.01" name="precio" [(ngModel)]="form.precio" required />
+    </div>
+    <div class="form-campo">
+      <label>Descripción</label>
+      <textarea name="descripcion" [(ngModel)]="form.descripcion" rows="2"></textarea>
+    </div>
+    <div class="form-campo">
+      <label>URL de la foto (opcional)</label>
+      <input type="text" name="fotoUrl" [(ngModel)]="form.fotoUrl" />
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primario" type="submit" [disabled]="cargando()">Guardar</button>
+      <button class="btn btn-secundario" type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <table class="tabla">
+    <thead>
+      <tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Estado</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of platillos()">
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.categoriaNombre }}</td>
+        <td>Q{{ p.precio }}</td>
+        <td>
+          <span class="badge" [class.badge-verde]="p.estado === 'DISPONIBLE'" [class.badge-rojo]="p.estado === 'AGOTADO'">
+            {{ p.estado }}
+          </span>
+        </td>
+        <td style="display:flex; gap:6px;">
+          <button class="btn btn-secundario" (click)="editar(p)">Editar</button>
+          <button class="btn" [class.btn-advertencia]="p.estado === 'DISPONIBLE'" [class.btn-exito]="p.estado === 'AGOTADO'"
+                  (click)="toggleDisponibilidad(p)">
+            {{ p.estado === 'DISPONIBLE' ? 'Marcar Agotado' : 'Marcar Disponible' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

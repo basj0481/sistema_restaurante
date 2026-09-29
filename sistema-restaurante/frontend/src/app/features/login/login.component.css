@@ -1,0 +1,31 @@
+.pantalla-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.tarjeta-login {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+}
+.tarjeta-login h1 {
+  font-size: 20px;
+  margin: 0 0 4px;
+  color: var(--color-primario);
+}
+.subtitulo {
+  margin: 0 0 20px;
+  color: #7a6a55;
+  font-size: 13px;
+}
+.enlace-olvido {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-primario);
+  text-decoration: none;
+}
+.enlace-olvido:hover { text-decoration: underline; }

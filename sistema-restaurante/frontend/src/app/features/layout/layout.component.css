@@ -1,0 +1,33 @@
+.layout { display: flex; min-height: 100vh; }
+
+.barra-lateral {
+  width: 220px;
+  background: var(--color-primario);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  flex-shrink: 0;
+}
+.marca { font-weight: 700; font-size: 16px; padding: 0 20px 20px; }
+
+nav { display: flex; flex-direction: column; gap: 2px; }
+nav a {
+  color: #f3e6d8;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+nav a:hover { background: rgba(255,255,255,.08); }
+nav a.activo { background: rgba(255,255,255,.18); font-weight: 600; color: white; }
+
+.usuario-actual {
+  margin-top: auto;
+  padding: 16px 20px 0;
+  border-top: 1px solid rgba(255,255,255,.2);
+}
+.usuario-actual .nombre { font-size: 13px; font-weight: 600; }
+.usuario-actual .rol { font-size: 11px; opacity: .8; margin-bottom: 10px; }
+.usuario-actual .btn { width: 100%; }
+
+.contenido { flex: 1; padding: 28px; overflow-y: auto; }

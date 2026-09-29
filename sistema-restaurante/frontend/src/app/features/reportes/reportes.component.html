@@ -1,0 +1,71 @@
+<div class="encabezado">
+  <h2>Reporte de Ventas</h2>
+</div>
+
+<div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+
+<div class="filtros card">
+  <div class="form-campo">
+    <label>Desde</label>
+    <input type="date" [(ngModel)]="desde" />
+  </div>
+  <div class="form-campo">
+    <label>Hasta</label>
+    <input type="date" [(ngModel)]="hasta" />
+  </div>
+  <button class="btn btn-primario" (click)="generar()" [disabled]="cargando()">
+    {{ cargando() ? 'Generando...' : 'Generar Reporte' }}
+  </button>
+  <button class="btn btn-secundario" (click)="exportar()" *ngIf="reporte()">Exportar</button>
+</div>
+
+<div *ngIf="reporte() as r" style="margin-top: 20px;">
+  <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
+    <div class="card" style="flex:1; min-width:160px;">
+      <div style="font-size:12px; color:#7a6a55;">Total de Ventas</div>
+      <div style="font-size:24px; font-weight:700;">Q{{ r.totalVentas }}</div>
+    </div>
+    <div class="card" style="flex:1; min-width:160px;">
+      <div style="font-size:12px; color:#7a6a55;">Pedidos Cobrados</div>
+      <div style="font-size:24px; font-weight:700;">{{ r.cantidadPedidos }}</div>
+    </div>
+    <div class="card" style="flex:1; min-width:160px;">
+      <div style="font-size:12px; color:#7a6a55;">Efectivo</div>
+      <div style="font-size:24px; font-weight:700;">Q{{ r.totalEfectivo }}</div>
+    </div>
+    <div class="card" style="flex:1; min-width:160px;">
+      <div style="font-size:12px; color:#7a6a55;">Tarjeta</div>
+      <div style="font-size:24px; font-weight:700;">Q{{ r.totalTarjeta }}</div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:20px; flex-wrap:wrap;">
+    <div class="card" style="flex:1; min-width:300px;">
+      <h3>Platillos más vendidos</h3>
+      <table class="tabla">
+        <thead><tr><th>Platillo</th><th>Cantidad</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let p of r.platillosMasVendidos">
+            <td>{{ p.platillo }}</td>
+            <td>{{ p.cantidadVendida }}</td>
+            <td>Q{{ p.totalGenerado }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="flex:1; min-width:300px;">
+      <h3>Ventas por Mesero</h3>
+      <table class="tabla">
+        <thead><tr><th>Mesero</th><th>Pedidos</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let v of r.ventasPorMesero">
+            <td>{{ v.mesero }}</td>
+            <td>{{ v.cantidadPedidos }}</td>
+            <td>Q{{ v.totalVendido }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

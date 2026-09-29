@@ -1,0 +1,114 @@
+<div class="encabezado">
+  <h2>Pedidos</h2>
+  <button class="btn btn-primario" (click)="abrirNuevoPedido()">+ Nuevo Pedido</button>
+</div>
+
+<div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+<div class="mensaje-exito" *ngIf="mensaje()">{{ mensaje() }}</div>
+
+<!-- CU07 Generar Pedido -->
+<div class="card" style="margin-bottom:20px;" *ngIf="mostrarNuevoPedido()">
+  <h3>Nuevo Pedido</h3>
+
+  <div style="display:flex; gap:20px; margin-bottom:14px;">
+    <label><input type="radio" name="tipo" value="MESA" [(ngModel)]="tipo" /> Mesa</label>
+    <label><input type="radio" name="tipo" value="PARA_LLEVAR" [(ngModel)]="tipo" /> Para Llevar</label>
+  </div>
+
+  <div class="form-campo" *ngIf="tipo === 'MESA'" style="max-width:200px;">
+    <label>Número de Mesa</label>
+    <input type="number" [(ngModel)]="numeroMesa" name="numeroMesa" required />
+  </div>
+
+  <div *ngIf="tipo === 'PARA_LLEVAR'" style="display:flex; gap:12px;">
+    <div class="form-campo" style="flex:1;">
+      <label>Nombre del Cliente</label>
+      <input type="text" [(ngModel)]="clienteNombre" name="clienteNombre" />
+    </div>
+    <div class="form-campo" style="flex:1;">
+      <label>Teléfono</label>
+      <input type="text" [(ngModel)]="clienteTelefono" name="clienteTelefono" />
+    </div>
+  </div>
+
+  <div style="display:flex; gap:20px; margin-top:10px;">
+    <div style="flex:1;">
+      <h4>Menú</h4>
+      <div *ngFor="let cat of categorias()" style="margin-bottom:10px;">
+        <div style="font-weight:600; font-size:13px; color:#7a6a55;">{{ cat.nombre }}</div>
+        <div *ngFor="let p of platillos()" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
+          <ng-container *ngIf="p.categoriaId === cat.id">
+            <span [class.badge-rojo]="p.estado === 'AGOTADO'">
+              {{ p.nombre }} — Q{{ p.precio }} <span class="badge badge-rojo" *ngIf="p.estado === 'AGOTADO'">Agotado</span>
+            </span>
+            <button class="btn btn-secundario" [disabled]="p.estado === 'AGOTADO'" (click)="agregarAlCarrito(p)">Agregar</button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;">
+      <h4>Carrito</h4>
+      <div *ngFor="let item of carrito; let i = index" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <input type="number" min="1" [(ngModel)]="item.cantidad" [name]="'cant'+i" style="width:60px;" />
+        <span style="flex:1;">{{ item.platillo.nombre }}</span>
+        <span>Q{{ item.platillo.precio * item.cantidad }}</span>
+        <button class="btn btn-peligro" (click)="quitarDelCarrito(i)">×</button>
+      </div>
+      <div *ngIf="carrito.length === 0" style="color:#999; font-size:13px;">Aún no has agregado platillos.</div>
+      <div style="font-weight:700; margin-top:10px;">Total: Q{{ totalCarrito() }}</div>
+
+      <div style="display:flex; gap:8px; margin-top:16px;">
+        <button class="btn btn-primario" [disabled]="cargando() || carrito.length === 0" (click)="enviarPedido()">
+          {{ cargando() ? 'Enviando...' : 'Enviar a Cocina' }}
+        </button>
+        <button class="btn btn-secundario" (click)="cancelarNuevoPedido()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CU08 Cobrar Cuenta -->
+<div class="card" style="margin-bottom:20px;" *ngIf="pedidoACobrar() as p">
+  <h3>Cobrar Pedido #{{ p.id }}</h3>
+  <p>Total a pagar: <strong>Q{{ p.total }}</strong></p>
+
+  <div style="display:flex; gap:20px; margin-bottom:14px;">
+    <label><input type="radio" name="metodo" value="EFECTIVO" [(ngModel)]="metodoPago" /> Efectivo</label>
+    <label><input type="radio" name="metodo" value="TARJETA" [(ngModel)]="metodoPago" /> Tarjeta</label>
+  </div>
+
+  <div class="form-campo" *ngIf="metodoPago === 'EFECTIVO'" style="max-width:200px;">
+    <label>Monto recibido</label>
+    <input type="number" step="0.01" [(ngModel)]="montoRecibido" name="montoRecibido" />
+    <div style="font-size:13px; color:#7a6a55;" *ngIf="montoRecibido">Cambio: Q{{ cambio() }}</div>
+  </div>
+
+  <div style="display:flex; gap:8px; margin-top:10px;">
+    <button class="btn btn-exito" [disabled]="cargando()" (click)="confirmarCobro()">Confirmar Cobro</button>
+    <button class="btn btn-secundario" (click)="cancelarCobro()">Cancelar</button>
+  </div>
+</div>
+
+<div class="card">
+  <table class="tabla">
+    <thead>
+      <tr><th>#</th><th>Tipo</th><th>Detalle</th><th>Total</th><th>Estado</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of pedidos()">
+        <td>{{ p.id }}</td>
+        <td>{{ p.tipo === 'MESA' ? 'Mesa ' + p.numeroMesa : 'Para Llevar' }}</td>
+        <td>{{ p.clienteNombre || '—' }}</td>
+        <td>Q{{ p.total }}</td>
+        <td><span class="badge" [ngClass]="colorEstado(p.estado)">{{ p.estado }}</span></td>
+        <td>
+          <button class="btn btn-exito" *ngIf="puedeCobrarse(p)" (click)="abrirCobro(p)">Cobrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="pedidos().length === 0">
+        <td colspan="6" style="text-align:center; color:#999;">No tienes pedidos activos.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

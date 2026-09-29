@@ -1,0 +1,28 @@
+export type Rol = "ADMINISTRADOR" | "MESERO" | "COCINA";
+
+export interface Usuario {
+  id: number;
+  nombreCompleto: string;
+  correo: string;
+  telefono?: string;
+  rol: Rol;
+  activo: boolean;
+  fechaCreacion: string;
+}
+
+export interface CrearUsuarioRequest {
+  nombreCompleto: string;
+  correo: string;
+  telefono?: string;
+  rol: Rol;
+  passwordTemporal: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  id: number;
+  nombreCompleto: string;
+  correo: string;
+  rol: Rol;
+  debeCambiarPassword: boolean;
+}

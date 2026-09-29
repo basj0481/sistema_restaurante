@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: restaurante-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: restaurante_db
+      POSTGRES_USER: restaurante_user
+      POSTGRES_PASSWORD: restaurante_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - restaurante_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U restaurante_user -d restaurante_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  restaurante_pg_data:

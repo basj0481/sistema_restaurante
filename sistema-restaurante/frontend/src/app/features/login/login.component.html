@@ -1,0 +1,24 @@
+<div class="pantalla-login">
+  <form class="card tarjeta-login" (ngSubmit)="ingresar()">
+    <h1>Sistema de Gestión de Restaurante</h1>
+    <p class="subtitulo">Portal de Acceso (Personal)</p>
+
+    <div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
+
+    <div class="form-campo">
+      <label>Correo electrónico</label>
+      <input type="email" name="correo" [(ngModel)]="correo" required autocomplete="username" />
+    </div>
+
+    <div class="form-campo">
+      <label>Contraseña</label>
+      <input type="password" name="password" [(ngModel)]="password" required autocomplete="current-password" />
+    </div>
+
+    <button class="btn btn-primario" type="submit" [disabled]="cargando() || !correo || !password">
+      {{ cargando() ? "Ingresando..." : "Iniciar Sesión" }}
+    </button>
+
+    <a class="enlace-olvido" routerLink="/olvide-password">¿Olvidó su contraseña?</a>
+  </form>
+</div>

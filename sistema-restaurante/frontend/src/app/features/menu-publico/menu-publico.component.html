@@ -1,0 +1,35 @@
+<div class="pagina-menu">
+  <header class="cabecera-menu">
+    <h1>🍽️ Nuestro Menú</h1>
+    <div class="numero-mesa" *ngIf="numeroMesa() as n">Mesa {{ n }}</div>
+  </header>
+
+  <div *ngIf="cargando()" class="estado">Cargando menú...</div>
+  <div *ngIf="error()" class="estado error">{{ error() }}</div>
+
+  <ng-container *ngIf="!cargando() && !error()">
+    <section class="categoria" *ngFor="let cat of categorias()">
+      <h2>{{ cat.nombre }}</h2>
+      <div class="platillo" *ngFor="let p of platillosDe(cat.id)" [class.agotado]="p.estado === 'AGOTADO'">
+        <img *ngIf="p.fotoUrl" [src]="p.fotoUrl" [alt]="p.nombre" />
+        <div class="info">
+          <div class="nombre-precio">
+            <span class="nombre">{{ p.nombre }}</span>
+            <span class="precio">Q{{ p.precio }}</span>
+          </div>
+          <p class="descripcion" *ngIf="p.descripcion">{{ p.descripcion }}</p>
+          <span class="badge badge-rojo" *ngIf="p.estado === 'AGOTADO'">Agotado</span>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <!-- CU13 Llamar al Mesero -->
+  <div class="barra-llamar" *ngIf="!cargando() && !error()">
+    <div class="mensaje-exito" *ngIf="llamadoEnviado()">✅ Tu llamado fue enviado. Un mesero se acercará pronto.</div>
+    <div class="mensaje-error" *ngIf="errorLlamado()">{{ errorLlamado() }}</div>
+    <button class="btn btn-primario boton-llamar" [disabled]="enviandoLlamado()" (click)="llamarMesero()">
+      {{ enviandoLlamado() ? 'Enviando...' : '🔔 Llamar al Mesero' }}
+    </button>
+  </div>
+</div>
