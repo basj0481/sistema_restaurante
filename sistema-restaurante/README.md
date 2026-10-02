@@ -154,8 +154,7 @@ producción, sustituye esa clase por una implementación de
 - **Gestión del menú**: ningún CU del alcance actual cubre quién crea o edita
   los platillos que el Cliente ve en CU12. Se agregó un módulo mínimo de
   mantenimiento para el Administrador (`/api/menu/**`, pantalla "Menú") para
-  que el sistema sea utilizable de punta a punta. Avísame si prefieres que
-  se formalice como un CU aparte.
+  que el sistema sea utilizable de punta a punta. 
 - **Pago con tarjeta (CU08 FA02)**: se asume aprobación inmediata de una
   terminal de pago simulada; no hay integración real con una pasarela.
 - **RN08 descuento automático de inventario**: al enviar un pedido (CU07) se
