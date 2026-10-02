@@ -1,1 +1,3 @@
-A la hora de subirlo a nube hay que cambiar y agregar rutas en el application.yml, hay que configurar variables de entorno
+A la hora de subirlo a nube hay que cambiar y agregar rutas en el application.yml, hay que configurar variables de entorno.
+
+hay que agregarle la facturacion (SAT), porque en el codigo solo esta simulado, al igual hay que agregar la viariable para poder mandar correos 
