@@ -84,25 +84,50 @@ Abre `http://localhost:4200`. El frontend consume la API en
 
 Contraseña para todos: **`Admin123!`**
 
-| Correo | Rol |
-|---|---|
-| admin@restaurante.com | ADMINISTRADOR |
-| mesero@restaurante.com | MESERO |
-| cocina@restaurante.com | COCINA |
+| Correo | Rol | Horario | Salario (planilla) |
+|---|---|---|---|
+| admin@restaurante.com | ADMINISTRADOR | 00:00–23:59 (sin restricción práctica) | Q8,000.00 |
+| mesero@restaurante.com | MESERO | 07:00–19:00 | Q2,800.00 |
+| cocina@restaurante.com | COCINA | 06:00–18:00 | Q3,200.00 |
+
+**CU01 FA04 — cierre de sesión por horario:** fuera del rango configurado
+para cada usuario, el backend deja de autenticar sus peticiones (401) y el
+frontend cierra la sesión automáticamente. Si necesitas probar esto fuera
+de ese rango, edita el horario del usuario en el módulo "Usuarios" o
+directamente en la tabla `usuarios`.
+
+**CU02 — Salario:** se guarda en su propia tabla, `planilla` (1:1 con `usuarios`).
 
 ## 5. Menú digital del Cliente (CU12 / CU13)
 
-Sin backend corriendo no hay datos, pero una vez arriba, cada mesa sembrada
-tiene un código QR de prueba: visita, por ejemplo:
+El menú que ve el Cliente es un **PDF** que el Administrador sube desde el
+módulo "Menú" (`/admin/menu`, sección "Menú en PDF"). Hasta que no se suba
+un PDF, la pantalla pública mostrará "El menú aún no está disponible".
+
+Sin backend corriendo no hay datos, pero una vez arriba (y con un PDF
+subido), cada mesa sembrada tiene un código QR de prueba: visita, por
+ejemplo:
 
 ```
 http://localhost:4200/menu/MESA-01-QR
 ```
 
-para ver el menú y probar "Llamar al Mesero" tal como lo haría un cliente
-que escanea el QR físico de la mesa 1.
+para ver el menú en PDF y probar "Llamar al Mesero" tal como lo haría un
+cliente que escanea el QR físico de la mesa 1.
 
-## 6. Mapeo Caso de Uso → Endpoint
+Nota: los platillos/categorías (CRUD en el mismo módulo "Menú") se
+mantienen — el Mesero los sigue usando para armar pedidos en CU07; solo la
+vista del Cliente cambió de tarjetas a PDF.
+
+## 6. Comprobante y API de la SAT (CU08)
+
+Al cobrar una cuenta, el comprobante incluye `serieSat` y
+`numeroAutorizacionSat`. **Esto está simulado** (`SatFacturacionServiceSimulado`
+genera un UUID) — no hay integración real con la SAT de Guatemala. Para
+producción, sustituye esa clase por una implementación de
+`SatFacturacionService` que llame a un certificador FEL autorizado.
+
+## 7. Mapeo Caso de Uso → Endpoint
 
 | CU | Endpoint(s) |
 |---|---|
@@ -117,10 +142,10 @@ que escanea el QR físico de la mesa 1.
 | CU09 Recibir Pedido | `PATCH /api/cocina/pedidos/{id}/recibir` |
 | CU10 Marcar Pedido Listo | `PATCH /api/cocina/pedidos/{id}/listo` |
 | CU11 Agregar Productos al Inventario | `POST /api/inventario/entrada`, `POST /api/inventario` |
-| CU12 Ver Menú (QR) | `GET /api/publico/mesas/{codigoQr}/menu` |
+| CU12 Ver Menú (QR, en PDF) | `GET /api/publico/mesas/{codigoQr}/menu`, `GET /api/publico/menu.pdf`, admin: `POST/GET /api/menu/pdf` |
 | CU13 Llamar al Mesero (QR) | `POST /api/publico/mesas/{codigoQr}/llamar-mesero`, `GET/PATCH /api/llamados` |
 
-## 7. Notas de diseño y alcance
+## 8. Notas de diseño y alcance
 
 - **Tiempo real**: en vez de WebSockets, el frontend usa sondeo periódico
   (polling cada 4–5s) en Cocina, Pedidos del Mesero y Llamados, para mantener

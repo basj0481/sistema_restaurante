@@ -31,6 +31,26 @@
       <label>Contraseña Temporal</label>
       <input type="password" name="passwordTemporal" [(ngModel)]="nuevo.passwordTemporal" required />
     </div>
+
+    <div style="display:flex; gap:12px;">
+      <div class="form-campo" style="flex:1;">
+        <label>Horario de trabajo — Inicio</label>
+        <input type="time" name="horaInicio" [(ngModel)]="nuevo.horaInicioTrabajo" required />
+      </div>
+      <div class="form-campo" style="flex:1;">
+        <label>Horario de trabajo — Fin</label>
+        <input type="time" name="horaFin" [(ngModel)]="nuevo.horaFinTrabajo" required />
+      </div>
+    </div>
+    <p style="font-size:12px; color:#7a6a55; margin-top:-8px;">
+      Fuera de este horario, el sistema cerrará la sesión del usuario automáticamente.
+    </p>
+
+    <div class="form-campo">
+      <label>Salario (Q)</label>
+      <input type="number" step="0.01" min="0" name="salario" [(ngModel)]="nuevo.salario" required />
+    </div>
+
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primario" type="submit" [disabled]="cargando()">Guardar</button>
       <button class="btn btn-secundario" type="button" (click)="cancelar()">Cancelar</button>
@@ -45,6 +65,8 @@
         <th>Nombre</th>
         <th>Correo</th>
         <th>Rol</th>
+        <th>Horario</th>
+        <th>Salario</th>
         <th>Estado</th>
         <th></th>
       </tr>
@@ -54,6 +76,8 @@
         <td>{{ u.nombreCompleto }}</td>
         <td>{{ u.correo }}</td>
         <td><span class="badge badge-azul">{{ u.rol }}</span></td>
+        <td>{{ horario(u) }}</td>
+        <td>{{ u.salario != null ? 'Q' + u.salario : '—' }}</td>
         <td>
           <span class="badge" [class.badge-verde]="u.activo" [class.badge-rojo]="!u.activo">
             {{ u.activo ? 'Activo' : 'Inactivo' }}

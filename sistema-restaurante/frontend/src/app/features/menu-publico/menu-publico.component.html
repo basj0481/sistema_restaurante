@@ -8,20 +8,12 @@
   <div *ngIf="error()" class="estado error">{{ error() }}</div>
 
   <ng-container *ngIf="!cargando() && !error()">
-    <section class="categoria" *ngFor="let cat of categorias()">
-      <h2>{{ cat.nombre }}</h2>
-      <div class="platillo" *ngFor="let p of platillosDe(cat.id)" [class.agotado]="p.estado === 'AGOTADO'">
-        <img *ngIf="p.fotoUrl" [src]="p.fotoUrl" [alt]="p.nombre" />
-        <div class="info">
-          <div class="nombre-precio">
-            <span class="nombre">{{ p.nombre }}</span>
-            <span class="precio">Q{{ p.precio }}</span>
-          </div>
-          <p class="descripcion" *ngIf="p.descripcion">{{ p.descripcion }}</p>
-          <span class="badge badge-rojo" *ngIf="p.estado === 'AGOTADO'">Agotado</span>
-        </div>
-      </div>
-    </section>
+    <div class="visor-pdf" *ngIf="menuDisponible() && urlPdfSegura()">
+      <iframe [src]="urlPdfSegura()" title="Menú del restaurante"></iframe>
+    </div>
+    <div class="estado" *ngIf="!menuDisponible()">
+      El menú aún no está disponible. Consulta con tu mesero.
+    </div>
   </ng-container>
 
   <!-- CU13 Llamar al Mesero -->

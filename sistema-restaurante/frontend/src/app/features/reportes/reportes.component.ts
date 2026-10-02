@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { ReporteService } from '../../core/services/reporte.service';
 import { ReporteVentas } from '../../core/models/reporte.model';
 
@@ -38,17 +40,46 @@ export class ReportesComponent {
     });
   }
 
+  /** CU06 FA03 - Exportar (solo formato PDF). */
   exportar(): void {
     const r = this.reporte();
     if (!r) return;
-    const contenido = JSON.stringify(r, null, 2);
-    const blob = new Blob([contenido], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `reporte-ventas-${this.desde}-a-${this.hasta}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+
+    const doc = new jsPDF();
+    let y = 16;
+
+    doc.setFontSize(16);
+    doc.text('Reporte de Ventas', 14, y);
+    y += 8;
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Período: ${this.desde} a ${this.hasta}`, 14, y);
+    y += 10;
+
+    doc.setTextColor(0);
+    doc.setFontSize(12);
+    doc.text(`Total de ventas: Q${r.totalVentas}`, 14, y); y += 7;
+    doc.text(`Pedidos cobrados: ${r.cantidadPedidos}`, 14, y); y += 7;
+    doc.text(`Efectivo: Q${r.totalEfectivo}    Tarjeta: Q${r.totalTarjeta}`, 14, y); y += 10;
+
+    autoTable(doc, {
+      startY: y,
+      head: [['Platillo', 'Cantidad', 'Total']],
+      body: r.platillosMasVendidos.map((p) => [p.platillo, String(p.cantidadVendida), `Q${p.totalGenerado}`]),
+      headStyles: { fillColor: [122, 59, 18] },
+      margin: { left: 14, right: 14 },
+    });
+
+    const siguienteY = (doc as any).lastAutoTable.finalY + 10;
+    autoTable(doc, {
+      startY: siguienteY,
+      head: [['Mesero', 'Pedidos', 'Total vendido']],
+      body: r.ventasPorMesero.map((v) => [v.mesero, String(v.cantidadPedidos), `Q${v.totalVendido}`]),
+      headStyles: { fillColor: [122, 59, 18] },
+      margin: { left: 14, right: 14 },
+    });
+
+    doc.save(`reporte-ventas-${this.desde}-a-${this.hasta}.pdf`);
   }
 
   private hoy(): string {

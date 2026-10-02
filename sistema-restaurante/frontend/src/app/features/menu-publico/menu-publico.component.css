@@ -2,6 +2,9 @@
   max-width: 480px;
   margin: 0 auto;
   padding: 20px 16px 100px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .cabecera-menu {
@@ -26,32 +29,20 @@
 .estado { text-align: center; padding: 40px 0; color: #7a6a55; }
 .estado.error { color: var(--color-error); }
 
-.categoria { margin-bottom: 24px; }
-.categoria h2 {
-  font-size: 16px;
-  color: var(--color-primario-claro);
-  border-bottom: 2px solid var(--color-borde);
-  padding-bottom: 6px;
-  margin-bottom: 10px;
+.visor-pdf {
+  flex: 1;
+  min-height: 65vh;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
 }
-
-.platillo {
-  display: flex;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--color-borde);
+.visor-pdf iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 65vh;
+  border: none;
 }
-.platillo.agotado { opacity: .5; }
-.platillo img {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-.platillo .info { flex: 1; }
-.nombre-precio { display: flex; justify-content: space-between; font-weight: 600; }
-.descripcion { margin: 4px 0 0; font-size: 13px; color: #7a6a55; }
 
 .barra-llamar {
   position: fixed;

@@ -13,10 +13,13 @@ public record PagoResponse(
         BigDecimal montoRecibido,
         BigDecimal cambio,
         String numeroComprobante,
+        String serieSat,
+        String numeroAutorizacionSat,
         LocalDateTime fecha
 ) {
     public static PagoResponse de(Pago p) {
         return new PagoResponse(p.getId(), p.getPedido().getId(), p.getMetodoPago().name(),
-                p.getTotal(), p.getMontoRecibido(), p.getCambio(), p.getNumeroComprobante(), p.getFecha());
+                p.getTotal(), p.getMontoRecibido(), p.getCambio(), p.getNumeroComprobante(),
+                p.getSerieSat(), p.getNumeroAutorizacionSat(), p.getFecha());
     }
 }

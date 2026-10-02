@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { CrearUsuarioRequest, Rol, Usuario } from '../../core/models/usuario.model';
 
-/** CU02 Registrar Usuario / CU04-admin Gestionar estado (Administrador). */
+/** CU02 Registrar Usuario (incluye horario de trabajo y salario) / Gestionar estado (Administrador). */
 @Component({
   selector: 'app-usuarios',
   standalone: true,
@@ -18,7 +18,7 @@ export class UsuariosComponent implements OnInit {
   error = signal<string | null>(null);
   mensaje = signal<string | null>(null);
 
-  nuevo: CrearUsuarioRequest = { nombreCompleto: '', correo: '', telefono: '', rol: 'MESERO', passwordTemporal: '' };
+  nuevo: CrearUsuarioRequest = this.formularioVacio();
   roles: Rol[] = ['ADMINISTRADOR', 'MESERO', 'COCINA'];
 
   constructor(private usuarioService: UsuarioService) {}
@@ -34,7 +34,7 @@ export class UsuariosComponent implements OnInit {
   abrirFormulario(): void {
     this.error.set(null);
     this.mensaje.set(null);
-    this.nuevo = { nombreCompleto: '', correo: '', telefono: '', rol: 'MESERO', passwordTemporal: '' };
+    this.nuevo = this.formularioVacio();
     this.mostrarFormulario.set(true);
   }
 
@@ -64,5 +64,23 @@ export class UsuariosComponent implements OnInit {
       next: () => this.cargar(),
       error: (err) => this.error.set(err?.error?.message ?? 'No se pudo actualizar el usuario.'),
     });
+  }
+
+  horario(u: Usuario): string {
+    if (!u.horaInicioTrabajo || !u.horaFinTrabajo) return '—';
+    return `${u.horaInicioTrabajo.slice(0, 5)} - ${u.horaFinTrabajo.slice(0, 5)}`;
+  }
+
+  private formularioVacio(): CrearUsuarioRequest {
+    return {
+      nombreCompleto: '',
+      correo: '',
+      telefono: '',
+      rol: 'MESERO',
+      passwordTemporal: '',
+      horaInicioTrabajo: '08:00',
+      horaFinTrabajo: '17:00',
+      salario: 0,
+    };
   }
 }

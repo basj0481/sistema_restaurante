@@ -21,8 +21,21 @@ CREATE TABLE usuarios (
     intentos_fallidos       INTEGER      NOT NULL DEFAULT 0,
     fecha_creacion          TIMESTAMP    NOT NULL DEFAULT now(),
     creado_por              BIGINT,
+    -- CU02 campo g. Horario de trabajo (usado por CU01 FA04 para el cierre de sesion automatico)
+    hora_inicio_trabajo     TIME,
+    hora_fin_trabajo        TIME,
     token_reset             VARCHAR(100),
     token_reset_expira      TIMESTAMP
+);
+
+-- ---------------------------------------------------------------------
+-- planilla (CU02 campo h. Salario, en su propia tabla)
+-- ---------------------------------------------------------------------
+CREATE TABLE planilla (
+    id                      BIGSERIAL PRIMARY KEY,
+    usuario_id              BIGINT        NOT NULL UNIQUE REFERENCES usuarios(id),
+    salario                 NUMERIC(10,2) NOT NULL CHECK (salario >= 0),
+    fecha_actualizacion     TIMESTAMP     NOT NULL DEFAULT now()
 );
 
 -- ---------------------------------------------------------------------
@@ -140,6 +153,9 @@ CREATE TABLE pagos (
     monto_recibido       NUMERIC(10,2),
     cambio               NUMERIC(10,2),
     numero_comprobante   VARCHAR(30)   NOT NULL UNIQUE,
+    -- CU08: comprobante asociado con la API de la SAT (ver SatFacturacionService)
+    serie_sat            VARCHAR(10),
+    numero_autorizacion_sat VARCHAR(60),
     fecha                TIMESTAMP     NOT NULL DEFAULT now()
 );
 

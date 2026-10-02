@@ -8,12 +8,22 @@
 -- Usuarios (CU02). El primer Administrador no lo puede crear otro
 -- Administrador porque el sistema no permite autorregistro (CU00/CU02),
 -- por lo que debe insertarse una unica vez por script/DBA.
+-- CU02 campo g. Horario de trabajo / CU01 FA04: fuera de ese horario, el
+-- sistema cierra la sesion automaticamente.
 -- ---------------------------------------------------------------------
-INSERT INTO usuarios (nombre_completo, correo, password_hash, telefono, rol, activo, debe_cambiar_password)
+INSERT INTO usuarios (nombre_completo, correo, password_hash, telefono, rol, activo, debe_cambiar_password, hora_inicio_trabajo, hora_fin_trabajo)
 VALUES
- ('Administrador General', 'admin@restaurante.com',  crypt('Admin123!', gen_salt('bf')), '00000000', 'ADMINISTRADOR', TRUE, FALSE),
- ('Mesero de Prueba',      'mesero@restaurante.com', crypt('Admin123!', gen_salt('bf')), '00000001', 'MESERO',        TRUE, FALSE),
- ('Cocina de Prueba',      'cocina@restaurante.com', crypt('Admin123!', gen_salt('bf')), '00000002', 'COCINA',        TRUE, FALSE);
+ ('Administrador General', 'admin@restaurante.com',  crypt('Admin123!', gen_salt('bf')), '00000000', 'ADMINISTRADOR', TRUE, FALSE, '00:00', '23:59'),
+ ('Mesero de Prueba',      'mesero@restaurante.com', crypt('Admin123!', gen_salt('bf')), '00000001', 'MESERO',        TRUE, FALSE, '07:00', '19:00'),
+ ('Cocina de Prueba',      'cocina@restaurante.com', crypt('Admin123!', gen_salt('bf')), '00000002', 'COCINA',        TRUE, FALSE, '06:00', '18:00');
+
+-- ---------------------------------------------------------------------
+-- planilla (CU02 campo h. Salario)
+-- ---------------------------------------------------------------------
+INSERT INTO planilla (usuario_id, salario) VALUES
+ ((SELECT id FROM usuarios WHERE correo = 'admin@restaurante.com'),  8000.00),
+ ((SELECT id FROM usuarios WHERE correo = 'mesero@restaurante.com'), 2800.00),
+ ((SELECT id FROM usuarios WHERE correo = 'cocina@restaurante.com'), 3200.00);
 
 -- ---------------------------------------------------------------------
 -- Mesas + codigo QR (CU12 / CU13). El codigo_qr es el valor que se

@@ -30,4 +30,16 @@ export class MenuService {
   cambiarDisponibilidad(id: number, disponible: boolean): Observable<Platillo> {
     return this.http.patch<Platillo>(`${this.base}/platillos/${id}/disponibilidad`, { disponible });
   }
+
+  /** CU12: el Administrador sube/reemplaza el PDF del menú que ve el Cliente. */
+  subirMenuPdf(archivo: File): Observable<{ mensaje: string }> {
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+    return this.http.post<{ mensaje: string }>(`${this.base}/pdf`, formData);
+  }
+
+  /** URL para previsualizar el PDF vigente (Administrador). */
+  urlMenuPdf(): string {
+    return `${this.base}/pdf`;
+  }
 }

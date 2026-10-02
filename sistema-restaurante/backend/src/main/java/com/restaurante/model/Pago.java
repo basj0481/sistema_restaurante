@@ -40,6 +40,13 @@ public class Pago {
     @Column(name = "numero_comprobante", nullable = false, unique = true, length = 30)
     private String numeroComprobante;
 
+    /** CU08: comprobante asociado con la API de la SAT (Ver SatFacturacionService). */
+    @Column(name = "serie_sat", length = 10)
+    private String serieSat;
+
+    @Column(name = "numero_autorizacion_sat", length = 60)
+    private String numeroAutorizacionSat;
+
     @Column(nullable = false)
     @Builder.Default
     private LocalDateTime fecha = LocalDateTime.now();

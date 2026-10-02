@@ -54,5 +54,7 @@ export interface Pago {
   montoRecibido?: number;
   cambio?: number;
   numeroComprobante: string;
+  serieSat?: string;
+  numeroAutorizacionSat?: string;
   fecha: string;
 }

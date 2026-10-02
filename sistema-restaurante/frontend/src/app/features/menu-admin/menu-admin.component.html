@@ -6,6 +6,19 @@
 <div class="mensaje-error" *ngIf="error()">{{ error() }}</div>
 <div class="mensaje-exito" *ngIf="mensaje()">{{ mensaje() }}</div>
 
+<div class="card" style="margin-bottom:20px;">
+  <h3>Menú en PDF (CU12 — lo que ve el Cliente al escanear el QR)</h3>
+  <p style="font-size:13px; color:#7a6a55;">Sube el PDF con el menú del restaurante. Reemplaza al anterior.</p>
+
+  <div class="mensaje-error" *ngIf="errorPdf()">{{ errorPdf() }}</div>
+  <div class="mensaje-exito" *ngIf="mensajePdf()">{{ mensajePdf() }}</div>
+
+  <div style="display:flex; align-items:center; gap:12px;">
+    <input type="file" accept="application/pdf" (change)="seleccionarPdf($event)" [disabled]="subiendoPdf()" />
+    <a [href]="urlMenuPdf()" target="_blank" class="btn btn-secundario">Ver PDF actual</a>
+  </div>
+</div>
+
 <div class="card" style="margin-bottom:20px;" *ngIf="mostrarFormulario()">
   <h3>{{ editandoId ? 'Editar Platillo' : 'Nuevo Platillo' }}</h3>
   <form (ngSubmit)="guardar()">

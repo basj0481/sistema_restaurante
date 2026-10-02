@@ -5,9 +5,11 @@ import { MenuService } from '../../core/services/menu.service';
 import { Categoria, Platillo, PlatilloRequest } from '../../core/models/menu.model';
 
 /**
- * Mantenimiento del menú (categorías y platillos) que alimenta CU12 Ver Menú.
- * No corresponde a un CU formal del alcance actual (ver nota en MenuService del backend);
- * se incluye para que el sistema sea utilizable de punta a punta.
+ * Mantenimiento del menú: platillos/categorías (usados por CU07 Generar Pedido, para que
+ * el Mesero arme el pedido) y el PDF público que ve el Cliente (CU12 Ver Menú).
+ * Los platillos/categorías no corresponden a un CU formal del alcance actual
+ * (ver nota en MenuService del backend); se incluyen para que el sistema sea
+ * utilizable de punta a punta.
  */
 @Component({
   selector: 'app-menu-admin',
@@ -23,6 +25,11 @@ export class MenuAdminComponent implements OnInit {
   cargando = signal(false);
   error = signal<string | null>(null);
   mensaje = signal<string | null>(null);
+
+  // CU12 - PDF del menú
+  subiendoPdf = signal(false);
+  errorPdf = signal<string | null>(null);
+  mensajePdf = signal<string | null>(null);
 
   form: PlatilloRequest = { nombre: '', categoriaId: 0, precio: 0, descripcion: '', fotoUrl: '' };
 
@@ -74,5 +81,34 @@ export class MenuAdminComponent implements OnInit {
 
   toggleDisponibilidad(p: Platillo): void {
     this.menuService.cambiarDisponibilidad(p.id, p.estado === 'AGOTADO').subscribe(() => this.cargar());
+  }
+
+  // ---------- CU12 Ver Menú: subir el PDF que verá el Cliente ----------
+
+  urlMenuPdf(): string {
+    return this.menuService.urlMenuPdf();
+  }
+
+  seleccionarPdf(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0];
+    if (!archivo) return;
+
+    this.errorPdf.set(null);
+    this.mensajePdf.set(null);
+    this.subiendoPdf.set(true);
+
+    this.menuService.subirMenuPdf(archivo).subscribe({
+      next: () => {
+        this.subiendoPdf.set(false);
+        this.mensajePdf.set('Menú en PDF actualizado exitosamente.');
+        input.value = '';
+      },
+      error: (err) => {
+        this.subiendoPdf.set(false);
+        this.errorPdf.set(err?.error?.message ?? 'No se pudo subir el archivo.');
+        input.value = '';
+      },
+    });
   }
 }

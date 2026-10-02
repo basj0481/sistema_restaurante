@@ -143,10 +143,13 @@ export class PedidosComponent implements OnInit, OnDestroy {
         montoRecibido: this.metodoPago === 'EFECTIVO' ? this.montoRecibido ?? undefined : undefined,
       })
       .subscribe({
-        next: () => {
+        next: (pago) => {
           this.cargando.set(false);
           this.pedidoACobrar.set(null);
-          this.mensaje.set('Cuenta cobrada exitosamente.');
+          // CU08: comprobante asociado con la API de la SAT
+          this.mensaje.set(
+            `Cuenta cobrada exitosamente. Comprobante ${pago.numeroComprobante} — Autorización SAT: ${pago.numeroAutorizacionSat}`
+          );
           this.cargarPedidos();
         },
         error: (err) => {

@@ -1,13 +1,13 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { PublicoService } from '../../core/services/publico.service';
-import { Categoria, Platillo } from '../../core/models/menu.model';
 
 /**
  * CU12 Ver Menú (vía Código QR) y CU13 Llamar al Mesero (vía Código QR).
  * Sin autenticación: el Cliente llega aquí escaneando el QR de su mesa,
- * que codifica la URL /menu/{codigoQr}.
+ * que codifica la URL /menu/{codigoQr}. El menú se muestra como PDF.
  */
 @Component({
   selector: 'app-menu-publico',
@@ -19,8 +19,8 @@ import { Categoria, Platillo } from '../../core/models/menu.model';
 export class MenuPublicoComponent implements OnInit {
   codigoQr = '';
   numeroMesa = signal<number | null>(null);
-  categorias = signal<Categoria[]>([]);
-  platillos = signal<Platillo[]>([]);
+  menuDisponible = signal(false);
+  urlPdfSegura = signal<SafeResourceUrl | null>(null);
   cargando = signal(true);
   error = signal<string | null>(null);
 
@@ -28,7 +28,11 @@ export class MenuPublicoComponent implements OnInit {
   enviandoLlamado = signal(false);
   errorLlamado = signal<string | null>(null);
 
-  constructor(private route: ActivatedRoute, private publicoService: PublicoService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private publicoService: PublicoService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
     this.codigoQr = this.route.snapshot.paramMap.get('codigoQr') ?? '';
@@ -36,18 +40,16 @@ export class MenuPublicoComponent implements OnInit {
       next: (res) => {
         this.cargando.set(false);
         this.numeroMesa.set(res.numeroMesa);
-        this.categorias.set(res.categorias);
-        this.platillos.set(res.platillos);
+        this.menuDisponible.set(res.menuDisponible);
+        if (res.menuDisponible) {
+          this.urlPdfSegura.set(this.sanitizer.bypassSecurityTrustResourceUrl(this.publicoService.urlMenuPdf()));
+        }
       },
       error: () => {
         this.cargando.set(false);
         this.error.set('El código QR no es válido o la mesa no está activa.');
       },
     });
-  }
-
-  platillosDe(categoriaId: number): Platillo[] {
-    return this.platillos().filter((p) => p.categoriaId === categoriaId);
   }
 
   // CU13 Llamar al Mesero

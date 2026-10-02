@@ -8,6 +8,9 @@ export interface Usuario {
   rol: Rol;
   activo: boolean;
   fechaCreacion: string;
+  horaInicioTrabajo?: string; // "HH:mm:ss"
+  horaFinTrabajo?: string;
+  salario?: number;
 }
 
 export interface CrearUsuarioRequest {
@@ -16,6 +19,9 @@ export interface CrearUsuarioRequest {
   telefono?: string;
   rol: Rol;
   passwordTemporal: string;
+  horaInicioTrabajo: string; // "HH:mm"
+  horaFinTrabajo: string;
+  salario: number;
 }
 
 export interface LoginResponse {

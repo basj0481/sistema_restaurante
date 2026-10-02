@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /** CU02 Registrar Usuario / CU04 Gestionar Usuarios. Solo lo crea el Administrador. */
 @Entity
@@ -57,6 +58,13 @@ public class Usuario {
 
     @Column(name = "creado_por")
     private Long creadoPor;
+
+    /** CU02 campo "g. Horario de trabajo". Usado por CU01 FA04 para el cierre de sesion automatico. */
+    @Column(name = "hora_inicio_trabajo")
+    private LocalTime horaInicioTrabajo;
+
+    @Column(name = "hora_fin_trabajo")
+    private LocalTime horaFinTrabajo;
 
     @Column(name = "token_reset")
     private String tokenReset;

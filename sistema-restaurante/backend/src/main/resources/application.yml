@@ -29,21 +29,26 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
-  #mail:
-   # host: smtp.gmail.com
-    #port: 587
-    #username: ${MAIL_USERNAME:cambiar_correo@gmail.com}
-    #password: ${MAIL_PASSWORD:cambiar_password_app}
-    #properties:
-     # mail:
-      #  smtp:
-       #   auth: true
-        #  starttls:
-         #   enable: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:cambiar_correo@gmail.com}
+    password: ${MAIL_PASSWORD:cambiar_password_app}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
 
 app:
   jwt:
-    secret: ${JWT_SECRET:vvWkCrm86BVAHKZ5HnTGovjQrizLt7yQ}
+    secret: ${JWT_SECRET:4M7xRzK9wB2vP6qL1hN5tY8mX3jC0fV4sD7gK9wB2vP6}
     expiration-ms: 28800000   # 8 horas (RN01 / CU01)
   frontend:
     base-url: ${FRONTEND_URL:http://localhost:4200}
@@ -51,6 +56,9 @@ app:
     max-intentos-fallidos: 5
   reset-password:
     expiracion-minutos: 30
+  menu:
+    # CU12: archivo PDF que ve el Cliente al escanear el QR de su mesa.
+    pdf-path: ${MENU_PDF_PATH:./data/menu/menu-actual.pdf}
 
 springdoc:
   swagger-ui:

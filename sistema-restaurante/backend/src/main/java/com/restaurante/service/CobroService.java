@@ -24,6 +24,7 @@ public class CobroService {
     private final PedidoRepository pedidoRepository;
     private final PagoRepository pagoRepository;
     private final BitacoraService bitacoraService;
+    private final SatFacturacionService satFacturacionService;
 
     @Transactional
     public PagoResponse cobrar(Long pedidoId, CobrarCuentaRequest request, Authentication auth) {
@@ -49,6 +50,9 @@ public class CobroService {
         Usuario mesero = usuarioActual(auth);
         String numeroComprobante = "CMP-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + pedido.getId();
 
+        // CU08: comprobante asociado con la API de la SAT (Ver SatFacturacionService)
+        SatFacturacionService.EmisionSat emisionSat = satFacturacionService.emitir(pedido, pedido.getTotal());
+
         Pago pago = Pago.builder()
                 .pedido(pedido)
                 .mesero(mesero)
@@ -57,6 +61,8 @@ public class CobroService {
                 .montoRecibido(montoRecibido)
                 .cambio(cambio)
                 .numeroComprobante(numeroComprobante)
+                .serieSat(emisionSat.serie())
+                .numeroAutorizacionSat(emisionSat.numeroAutorizacion())
                 .build();
         pago = pagoRepository.save(pago);
 
