@@ -5,17 +5,21 @@ agregar esto a la bd (restaurante_bd) para darle permisos:
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- Permitir que restaurante_user utilice el esquema public
+
 GRANT USAGE, CREATE ON SCHEMA public TO restaurante_user;
 
 -- Dar permisos completos sobre las tablas existentes
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public
 TO restaurante_user;
 
 -- Dar permisos sobre las secuencias
+
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public
 TO restaurante_user;
 
 -- Cambiar el propietario de las tablas existentes a restaurante_user
+
 DO $$
 DECLARE
     r RECORD;
